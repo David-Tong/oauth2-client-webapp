@@ -1,0 +1,24 @@
+:root { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #17213a; background: #f0f3f9; font-synthesis: none; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+.shell { min-height: 100vh; display: grid; place-items: center; padding: 24px; background: radial-gradient(circle at 20% 10%, #e0e8ff, transparent 40%), #f5f7fb; }
+.card { width: min(100%, 440px); background: white; border: 1px solid #e3e8f2; border-radius: 20px; box-shadow: 0 18px 60px #253c6b18; padding: 36px; }
+.mark { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; color: white; font-weight: 800; font-size: 23px; background: #4b63e6; }
+.eyebrow { color: #586dd6; font-size: 11px; font-weight: 700; letter-spacing: .14em; margin: 26px 0 8px; }
+h1 { font-size: 28px; margin: 0; letter-spacing: -.03em; }
+.subtitle { color: #6a758d; font-size: 14px; line-height: 1.7; margin: 10px 0 24px; }
+form { display: grid; gap: 8px; }
+label { font-size: 13px; font-weight: 650; margin-top: 8px; }
+input { width: 100%; padding: 12px; border: 1px solid #d5dcea; border-radius: 9px; font: inherit; outline-color: #4b63e6; }
+button { width: 100%; border: 0; border-radius: 9px; background: #4b63e6; color: white; font: inherit; font-weight: 650; cursor: pointer; padding: 13px; margin-top: 16px; }
+button:hover { background: #3c51c9; }
+button:disabled { opacity: .6; cursor: wait; }
+.secondary { background: #edf0fc; color: #344cb7; }
+.secondary:hover { background: #dfe5fb; }
+.error { background: #fff1f1; color: #a52c35; border-radius: 9px; padding: 12px; margin-bottom: 16px; font-size: 13px; overflow-wrap: anywhere; }
+.details { border: 1px solid #e8ecf4; border-radius: 10px; padding: 4px 14px; }
+.details div { display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; font-size: 13px; }
+.details div + div { border-top: 1px solid #eef1f6; }
+.details span { color: #758098; }
+.details strong { text-align: right; overflow-wrap: anywhere; }
+.footnote { text-align: center; color: #9aa4b6; font-size: 12px; margin: 24px 0 0; }
