@@ -3,6 +3,7 @@ import AuthLayout from './components/AuthLayout';
 import LoginForm from './components/LoginForm';
 import AccountDetails from './components/AccountDetails';
 import useAuth from './hooks/useAuth';
+import ResourcePanel from './components/ResourcePanel';
 
 const headings = {
   loading: ['Secure sign-in', 'Sign in to this app with your authorization server account.'],
@@ -24,7 +25,10 @@ export default function App() {
       )}
       {view === 'login' && <LoginForm busy={busy} onSignIn={signIn} />}
       {view === 'account' && user && token && (
-        <AccountDetails user={user} token={token} busy={busy} canReauthorize={Boolean(error)} onAuthorize={authorize} onSignOut={signOut} />
+        <>
+          <AccountDetails user={user} token={token} busy={busy} canReauthorize={Boolean(error)} onAuthorize={authorize} onSignOut={signOut} />
+          <ResourcePanel token={token} busy={busy} onAuthorize={authorize} />
+        </>
       )}
     </AuthLayout>
   );

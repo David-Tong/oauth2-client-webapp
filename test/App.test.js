@@ -2,6 +2,30 @@ import { test } from 'vitest';
 import assert from 'node:assert/strict';
 import { act, fireEvent, location, redirects, identity, saveToken, mountApp, deferred } from './helpers/browser.js';
 
+test('App loads protected resource and displays the server subject', async () => {
+  saveToken();
+  const ui = await mountApp();
+  const pending = deferred();
+  globalThis.fetch = () => pending.promise;
+  await act(async () => { fireEvent.click(ui.getByRole('button', { name: 'Load resource' })); });
+  assert.equal(ui.getByRole('button', { name: 'Loading resource...' }).disabled, true);
+  await act(async () => { pending.resolve(Response.json({ message: 'Protected data loaded', subject: 'user-001', items: ['Resource item'] })); });
+  assert.ok(ui.getByText('Protected data loaded'));
+  assert.ok(ui.getByText('Token subject: user-001'));
+  assert.ok(ui.getByText('Resource item'));
+  assert.equal(ui.getByRole('button', { name: 'Load resource' }).disabled, false);
+});
+
+test('App reports rejected resource token and can restart authorization', async () => {
+  saveToken();
+  const ui = await mountApp();
+  globalThis.fetch = async () => new Response(null, { status: 401 });
+  await act(async () => { fireEvent.click(ui.getByRole('button', { name: 'Load resource' })); });
+  assert.match(ui.getByRole('alert').textContent, /authorize again/);
+  await act(async () => { fireEvent.click(ui.getByRole('button', { name: 'Authorize resource access again' })); });
+  assert.equal(redirects.length, 1);
+});
+
 test('App shows a loading status while restoring a server session', async () => {
   saveToken();
   const pending = deferred();

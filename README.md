@@ -32,3 +32,10 @@ npm run build
 ```
 
 服务器不支持 refresh token。这里的自动更新是访问令牌到期前，利用现有服务器会话重新进行一次完整的 PKCE 授权码流程，期间页面会跳转；会话失效时需要重新登录。这不是 OAuth2 refresh token grant，也不会在浏览器关闭后运行。
+
+## 访问资源服务
+
+启动 `oauth2-resource-server`（默认 `http://localhost:9002`）后，登录并点击
+**Load resource**，查看通过 Bearer 令牌保护的演示资源。Vite 将 `/api/resources/**`
+代理到资源服务，可在启动前用 `RESOURCE_SERVER_PROXY_TARGET` 修改代理目标。
+生产部署也需要增加该路径的同源反向代理。401 时可点击重新授权，403 表示缺少 `demo.read` 权限。

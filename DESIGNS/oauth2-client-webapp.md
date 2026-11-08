@@ -1,5 +1,15 @@
 # 客户端设计
 
+## 资源服务集成
+
+登录后的 **Protected resource** 面板通过 **Load resource** 请求同源
+`GET /api/resources/demo`，仅在 Authorization Bearer 头中传递当前访问令牌，
+不发送 Cookie、不缓存资源、不跟随重定向。Vite 默认代理至 `http://localhost:9002`，
+可用 `RESOURCE_SERVER_PROXY_TARGET` 覆盖；生产反向代理需要增加 `/api/resources/**` 路由。
+成功展示资源 message、subject 和条目；401 提示重新授权，403 提示缺少 `demo.read`，
+网络及服务错误允许重试。过期令牌不发请求，重新授权沿用现有 PKCE 流程。
+退出导致面板卸载并取消未完成请求。服务端契约见资源服务的 `DESIGNS/oauth2-resource-server.md`。
+
 ## 约束与流程
 
 认证服务器仅注册了授权码 grant，要求 S256 PKCE，不签发 refresh token；默认客户端 `webapp` 是无密钥公共客户端。服务器不提供前端页面。客户端和认证端点通过反向代理处于同一来源，因而同源 Cookie、CSRF 和固定回调地址均能工作。
