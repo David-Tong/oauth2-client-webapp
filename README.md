@@ -4,7 +4,7 @@
 
 ## 本地运行
 
-需要 Node.js 18+、npm、Java 17+，以及已配置用户的认证服务器。
+需要 Node.js 20+、npm、Java 17+，以及已配置用户的认证服务器。
 
 1. 在 `oauth2-auth-server` 中按其 README 配置 `config/users.json`，然后启动服务器，让它监听 9001 端口，而公开 issuer 仍为 `http://localhost:9000`：
 

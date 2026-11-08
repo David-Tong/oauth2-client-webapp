@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite --host localhost --port 9000 --strictPort",
     "build": "npm run typecheck && vite build",
-    "test": "node --import tsx --test test/auth.test.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -14,14 +15,16 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@testing-library/react": "^16.3.3",
     "@types/node": "^20.19.43",
     "@types/react": "^18.3.31",
     "@types/react-dom": "^18.3.7",
-    "tsx": "^4.23.15",
+    "jsdom": "^26.1.0",
     "typescript": "~5.7.3",
-    "vite": "^6.4.1"
+    "vite": "^6.4.1",
+    "vitest": "^4.1.12"
   },
   "engines": {
-    "node": "^18.0.0 || ^20.0.0 || >=22.0.0"
+    "node": "^20.0.0 || ^22.0.0 || >=24.0.0"
   }
 }
