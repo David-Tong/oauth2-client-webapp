@@ -1,11 +1,19 @@
 import React from 'react';
 
-export default function LoginForm({ busy, onSignIn }) {
-  async function handleSubmit(event) {
+interface LoginFormProps {
+  busy: boolean;
+  onSignIn: (username: string, password: string) => Promise<boolean | undefined>;
+}
+
+export default function LoginForm({ busy, onSignIn }: LoginFormProps) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const data = new FormData(form);
-    if (await onSignIn(data.get('username'), data.get('password'))) {
+    const username = data.get('username');
+    const password = data.get('password');
+    if (typeof username !== 'string' || typeof password !== 'string') return;
+    if (await onSignIn(username, password)) {
       form.reset();
     }
   }

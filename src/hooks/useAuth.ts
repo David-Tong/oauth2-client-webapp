@@ -1,11 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
-import { beginAuthorization, clearAccessToken, clearToken, finishAuthorization, getSession, login, logout, readToken, renewalDelay } from '../auth.js';
+import { beginAuthorization, clearAccessToken, clearToken, finishAuthorization, getSession, login, logout, readToken, renewalDelay } from '../auth';
+
+import type { AccessToken, SessionUser } from '../auth';
+
+export type AuthView = 'loading' | 'welcome' | 'login' | 'account';
 
 export default function useAuth() {
-  const [view, setView] = useState('loading');
+  const [view, setView] = useState<AuthView>('loading');
   const [error, setError] = useState('');
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
+  const [user, setUser] = useState<SessionUser | null>(null);
+  const [token, setToken] = useState<AccessToken | null>(null);
   const [busy, setBusy] = useState(false);
   const operation = useRef(false);
 
@@ -17,7 +21,7 @@ export default function useAuth() {
     try {
       await beginAuthorization();
     } catch (err) {
-      setError(err.message);
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred.');
       setBusy(false);
       operation.current = false;
     }
@@ -54,7 +58,7 @@ export default function useAuth() {
         setView('account');
       } catch (err) {
         clearToken();
-        setError(err.message);
+        setError(err instanceof Error ? err.message : 'An unexpected error occurred.');
         setView('welcome');
       }
     }
@@ -63,11 +67,12 @@ export default function useAuth() {
 
   useEffect(() => {
     if (view !== 'account' || !token) return undefined;
+    const currentToken = token;
     let active = true;
-    let timer;
+    let timer: ReturnType<typeof setTimeout> | undefined;
     function schedule() {
       clearTimeout(timer);
-      const delay = renewalDelay(token);
+      const delay = renewalDelay(currentToken);
       if (delay <= 0) {
         if (active && operation.current) {
           timer = setTimeout(schedule, 1000);
@@ -88,7 +93,7 @@ export default function useAuth() {
     };
   }, [view, token]);
 
-  async function signIn(username, password) {
+  async function signIn(username: string, password: string) {
     if (operation.current) return;
     operation.current = true;
     setBusy(true);
@@ -97,7 +102,7 @@ export default function useAuth() {
       await login(username, password);
       return true;
     } catch (err) {
-      setError(err.message);
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred.');
       setBusy(false);
       operation.current = false;
     }
@@ -115,7 +120,7 @@ export default function useAuth() {
       window.history.replaceState(null, '', '/app/');
       setView('welcome');
     } catch (err) {
-      setError(err.message);
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred.');
     } finally {
       setBusy(false);
       operation.current = false;

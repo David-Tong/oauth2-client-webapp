@@ -6,32 +6,32 @@
 
 ```text
 index.html
-  src/main.jsx                 Mount React and load styles
-    src/App.jsx                Select the view and connect callbacks
-      components/AuthLayout.jsx
-      components/LoginForm.jsx
-      components/AccountDetails.jsx
-      hooks/useAuth.js         Manage state and authentication lifecycle
-        src/auth.js           Handle HTTP, PKCE, storage, and navigation
+  src/main.tsx                 Mount React and load styles
+    src/App.tsx                Select the view and connect callbacks
+      components/AuthLayout.tsx
+      components/LoginForm.tsx
+      components/AccountDetails.tsx
+      hooks/useAuth.ts         Manage state and authentication lifecycle
+        src/auth.ts           Handle HTTP, PKCE, storage, and navigation
 ```
 
-组件负责展示，`useAuth` 负责把认证过程变成 React 状态，`auth.js` 负责具体执行协议操作。先理解每一层做什么，再深入函数内部，会更容易跟上代码。
+组件负责展示，`useAuth` 负责把认证过程变成 React 状态，`auth.ts` 负责具体执行协议操作。先理解每一层做什么，再深入函数内部，会更容易跟上代码。
 
 ## 2. 建议的阅读顺序
 
 | 顺序 | 文件 | 阅读时关注的问题 |
 | --- | --- | --- |
-| 1 | [main.jsx](../src/main.jsx) | React 挂载到哪里？样式从哪里加载？ |
-| 2 | [App.jsx](../src/App.jsx) | 当前显示哪个页面？事件交给谁处理？ |
-| 3 | [AuthLayout.jsx](../src/components/AuthLayout.jsx) | 哪些布局是共用的？`children` 放在哪里？ |
-| 4 | [LoginForm.jsx](../src/components/LoginForm.jsx) | 如何读取表单、调用父层传入的函数？ |
-| 5 | [AccountDetails.jsx](../src/components/AccountDetails.jsx) | 账号数据如何显示？按钮如何通知父层？ |
-| 6 | [useAuth.js](../src/hooks/useAuth.js) | 初始化、登录、自动更新和退出怎样改变状态？ |
-| 7 | [auth.js](../src/auth.js) | 网络请求、PKCE 校验和存储具体如何实现？ |
-| 8 | [vite.config.js](../vite.config.js) | 前端请求怎样到达认证服务器？ |
+| 1 | [main.tsx](../src/main.tsx) | React 挂载到哪里？样式从哪里加载？ |
+| 2 | [App.tsx](../src/App.tsx) | 当前显示哪个页面？事件交给谁处理？ |
+| 3 | [AuthLayout.tsx](../src/components/AuthLayout.tsx) | 哪些布局是共用的？`children` 放在哪里？ |
+| 4 | [LoginForm.tsx](../src/components/LoginForm.tsx) | 如何读取表单、调用父层传入的函数？ |
+| 5 | [AccountDetails.tsx](../src/components/AccountDetails.tsx) | 账号数据如何显示？按钮如何通知父层？ |
+| 6 | [useAuth.ts](../src/hooks/useAuth.ts) | 初始化、登录、自动更新和退出怎样改变状态？ |
+| 7 | [auth.ts](../src/auth.ts) | 网络请求、PKCE 校验和存储具体如何实现？ |
+| 8 | [vite.config.ts](../vite.config.ts) | 前端请求怎样到达认证服务器？ |
 | 9 | [auth.test.js](../test/auth.test.js) | 哪些成功和失败场景已有验证？ |
 
-第一次阅读 `App.jsx` 时，把 `useAuth()` 暂时理解成“返回当前状态和可执行操作的函数”即可，不必立刻展开所有细节。
+第一次阅读 `App.tsx` 时，把 `useAuth()` 暂时理解成“返回当前状态和可执行操作的函数”即可，不必立刻展开所有细节。
 
 ## 3. 用 React 的数据流理解组件
 
@@ -69,7 +69,7 @@ index.html
 ### 从欢迎页发起授权
 
 1. 用户点击 `App` 中的登录按钮，调用 hook 的 `authorize()`。
-2. `authorize()` 设置操作锁和 `busy`，再调用 `auth.js` 的 `beginAuthorization()`。
+2. `authorize()` 设置操作锁和 `busy`，再调用 `auth.ts` 的 `beginAuthorization()`。
 3. `beginAuthorization()` 生成随机 `state` 和 `verifier`，计算 S256 challenge，把本次事务存入 `sessionStorage`，并清除旧的本地令牌。
 4. 浏览器通过 `window.location.assign()` 前往 `/oauth2/authorize`。这是整页导航。
 
@@ -138,13 +138,13 @@ LoginForm.handleSubmit
 
 ## 9. 理解本地代理
 
-`package.json` 中的开发命令让 Vite 监听 `http://localhost:9000`，`vite.config.js` 把前端基础路径设为 `/app/`，并把以下请求代理到认证服务器，默认目标为 `http://localhost:9001`：
+`package.json` 中的开发命令让 Vite 监听 `http://localhost:9000`，`vite.config.ts` 把前端基础路径设为 `/app/`，并把以下请求代理到认证服务器，默认目标为 `http://localhost:9001`：
 
 - `/api/auth`
 - `/oauth2`
 - `/.well-known`
 
-因此 `auth.js` 可以使用 `/api/auth/session` 这样的相对地址，浏览器看到的仍是前端同源请求。`AUTH_SERVER_PROXY_TARGET` 可以改变开发代理目标。Vite 的开发代理不随静态构建自动部署；生产路由要求见客户端设计文档。
+因此 `auth.ts` 可以使用 `/api/auth/session` 这样的相对地址，浏览器看到的仍是前端同源请求。`AUTH_SERVER_PROXY_TARGET` 可以改变开发代理目标。Vite 的开发代理不随静态构建自动部署；生产路由要求见客户端设计文档。
 
 ## 10. 带着问题检查代码
 
@@ -154,4 +154,4 @@ LoginForm.handleSubmit
 
 最后阅读 `test/auth.test.js`：它使用模拟的浏览器对象、存储和 `fetch` 验证协议函数，涵盖 PKCE 交换、无效或重复 state、令牌响应校验、继续地址限制、退出失败和会话错误。它没有覆盖 React 组件渲染，也没有替代真实服务器的端到端验证。
 
-修改时可以按责任定位：页面排版看组件和 `style.css`，视图切换及定时器看 `useAuth.js`，认证请求和校验看 `auth.js`，本地代理看 `vite.config.js`。
+修改时可以按责任定位：页面排版看组件和 `style.css`，视图切换及定时器看 `useAuth.ts`，认证请求和校验看 `auth.ts`，本地代理看 `vite.config.ts`。

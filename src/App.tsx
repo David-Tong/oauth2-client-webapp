@@ -1,8 +1,8 @@
 import React from 'react';
-import AuthLayout from './components/AuthLayout.jsx';
-import LoginForm from './components/LoginForm.jsx';
-import AccountDetails from './components/AccountDetails.jsx';
-import useAuth from './hooks/useAuth.js';
+import AuthLayout from './components/AuthLayout';
+import LoginForm from './components/LoginForm';
+import AccountDetails from './components/AccountDetails';
+import useAuth from './hooks/useAuth';
 
 const headings = {
   loading: ['Secure sign-in', 'Sign in to this app with your authorization server account.'],
@@ -23,7 +23,7 @@ export default function App() {
         <button disabled={busy} onClick={authorize}>{busy ? 'Redirecting...' : 'Sign in'}</button>
       )}
       {view === 'login' && <LoginForm busy={busy} onSignIn={signIn} />}
-      {view === 'account' && (
+      {view === 'account' && user && token && (
         <AccountDetails user={user} token={token} busy={busy} canReauthorize={Boolean(error)} onAuthorize={authorize} onSignOut={signOut} />
       )}
     </AuthLayout>

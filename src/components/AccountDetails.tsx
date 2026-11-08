@@ -1,6 +1,16 @@
 import React from 'react';
 
-export default function AccountDetails({ user, token, busy, canReauthorize, onAuthorize, onSignOut }) {
+import type { AccessToken, SessionUser } from '../auth';
+interface AccountDetailsProps {
+  user: SessionUser;
+  token: AccessToken;
+  busy: boolean;
+  canReauthorize: boolean;
+  onAuthorize: () => Promise<void>;
+  onSignOut: () => Promise<void>;
+}
+
+export default function AccountDetails({ user, token, busy, canReauthorize, onAuthorize, onSignOut }: AccountDetailsProps) {
   return (
     <>
       <div className="details">

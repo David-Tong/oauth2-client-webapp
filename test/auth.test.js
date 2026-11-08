@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { webcrypto } from 'node:crypto';
-import { beginAuthorization, clearAccessToken, finishAuthorization, getSession, login, logout, readToken, renewalDelay } from '../src/auth.js';
+import { beginAuthorization, clearAccessToken, finishAuthorization, getSession, login, logout, readToken, renewalDelay } from '../src/auth.ts';
 
 let storage;
 let assigned;
@@ -9,7 +9,7 @@ let assigned;
 beforeEach(() => {
   storage = new Map();
   assigned = null;
-  globalThis.crypto = webcrypto;
+  Object.defineProperty(globalThis, 'crypto', { value: webcrypto, configurable: true });
   globalThis.sessionStorage = {
     getItem: key => storage.get(key) ?? null,
     setItem: (key, value) => storage.set(key, value),
