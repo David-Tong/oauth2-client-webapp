@@ -138,7 +138,7 @@ LoginForm.handleSubmit
 
 ## 9. 理解本地代理
 
-`package.json` 中的开发命令让 Vite 监听 `http://localhost:9000`，`vite.config.ts` 把前端基础路径设为 `/app/`，并把以下请求代理到认证服务器，默认目标为 `http://localhost:9001`：
+`package.json` 中的开发命令让 Vite 监听 `http://localhost:9001`，`vite.config.ts` 把前端基础路径设为 `/app/`，并把以下请求代理到认证服务器，默认目标为 `http://localhost:9000`：
 
 - `/api/auth`
 - `/oauth2`

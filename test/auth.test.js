@@ -17,7 +17,7 @@ beforeEach(() => {
     setItem: (key, value) => storage.set(key, value),
     removeItem: key => storage.delete(key)
   };
-  globalThis.window = { location: { origin: 'http://localhost:9000', assign: url => { assigned = url; } } };
+  globalThis.window = { location: { origin: 'http://localhost:9001', assign: url => { assigned = url; } } };
 });
 
 afterEach(() => {
@@ -35,7 +35,7 @@ test('PKCE authorization and code exchange persist a usable token', async () => 
   assert.equal(url.pathname, '/oauth2/authorize');
   assert.equal(url.searchParams.get('code_challenge'), Buffer.from(digest).toString('base64url'));
   assert.equal(url.searchParams.get('state'), tx.state);
-  assert.equal(url.searchParams.get('redirect_uri'), 'http://localhost:9000/app/callback');
+  assert.equal(url.searchParams.get('redirect_uri'), 'http://localhost:9001/app/callback');
   clearAccessToken();
   globalThis.fetch = async (path, options) => {
     assert.equal(path, '/oauth2/token');
@@ -194,7 +194,7 @@ test('token exchange uses same-origin form credentials and accepts case-insensit
     assert.equal(options.headers['Content-Type'], 'application/x-www-form-urlencoded');
     assert.deepEqual(Object.fromEntries(options.body), {
       grant_type: 'authorization_code', client_id: 'webapp',
-      redirect_uri: 'http://localhost:9000/app/callback', code: 'a+b&c', code_verifier: 'verifier'
+      redirect_uri: 'http://localhost:9001/app/callback', code: 'a+b&c', code_verifier: 'verifier'
     });
     return Response.json({ access_token: 'access', token_type: 'bEaReR', expires_in: 60 });
   };

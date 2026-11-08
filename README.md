@@ -6,10 +6,10 @@
 
 需要 Node.js 20+、npm、Java 17+，以及已配置用户的认证服务器。
 
-1. 在 `oauth2-auth-server` 中按其 README 配置 `config/users.json`，然后启动服务器，让它监听 9001 端口，而公开 issuer 仍为 `http://localhost:9000`：
+1. 在 `oauth2-auth-server` 中按其 README 配置 `config/users.json`，然后启动服务器，让它监听 9000 端口，而公开 issuer 仍为 `http://localhost:9001`：
 
    ```powershell
-   java -jar target/oauth2-auth-server-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev --server.port=9001
+   java -jar target/oauth2-auth-server-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev --server.port=9000
    ```
 
 2. 在本项目目录启动前端：
@@ -19,9 +19,9 @@
    npm run dev
    ```
 
-3. 打开 http://localhost:9000/app/。Vite 将 `/api/auth`、`/oauth2` 和 `/.well-known` 代理到 `http://localhost:9001`；浏览器始终使用同一来源。不要混用 `localhost` 和 `127.0.0.1`。默认客户端为 `webapp`，回调地址必须与服务器注册的 `http://localhost:9000/app/callback` 完全一致。
+3. 打开 http://localhost:9001/app/。Vite 将 `/api/auth`、`/oauth2` 和 `/.well-known` 代理到 `http://localhost:9000`；浏览器始终使用同一来源。不要混用 `localhost` 和 `127.0.0.1`。默认客户端为 `webapp`，回调地址必须与服务器注册的 `http://localhost:9001/app/callback` 完全一致。
 
-也可以通过 `AUTH_SERVER_PROXY_TARGET` 修改 Vite 代理目标，例如 `$env:AUTH_SERVER_PROXY_TARGET='http://localhost:9001'`。该变量不是浏览器端秘密。代理只适用于本地开发；生产环境应使用同源反向代理和 HTTPS，并配置服务器 issuer 与客户端回调地址。
+也可以通过 `AUTH_SERVER_PROXY_TARGET` 修改 Vite 代理目标，例如 `$env:AUTH_SERVER_PROXY_TARGET='http://localhost:9000'`。该变量不是浏览器端秘密。代理只适用于本地开发；生产环境应使用同源反向代理和 HTTPS，并配置服务器 issuer 与客户端回调地址。
 
 ## 验证
 

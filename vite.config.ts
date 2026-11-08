@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 
-const target = process.env.AUTH_SERVER_PROXY_TARGET || 'http://localhost:9001';
+const target = process.env.AUTH_SERVER_PROXY_TARGET || 'http://localhost:9000';
 
 export default defineConfig({
   base: '/app/',

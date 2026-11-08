@@ -29,10 +29,10 @@ const h = React.createElement;
 
 beforeEach(() => {
   originals = new Map();
-  dom = new JSDOM('<!doctype html><html><body></body></html>', { url: 'http://localhost:9000/app/' });
+  dom = new JSDOM('<!doctype html><html><body></body></html>', { url: 'http://localhost:9001/app/' });
   redirects = [];
   requests = [];
-  location = { origin: 'http://localhost:9000', pathname: '/app/', search: '', assign: url => redirects.push(url) };
+  location = { origin: 'http://localhost:9001', pathname: '/app/', search: '', assign: url => redirects.push(url) };
   // Keep real DOM constructors while recording navigation instead of leaving the test page.
   const browser = Object.create(dom.window);
   Object.defineProperties(browser, {
